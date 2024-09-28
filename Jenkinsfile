@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  tools {
+    nodejs 'NodeJS' // Name of your Node.js installation
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -14,7 +18,7 @@ pipeline {
     stage('Test') {
       steps {
         script {
-          // Run unit tests (add unit tests in Step 6)
+          // Run unit tests
           sh 'npm test'
         }
       }
@@ -23,7 +27,7 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-          // Deploy the application (e.g., start it using node)
+          // Start the application
           sh 'nohup node app.js &'
         }
       }
