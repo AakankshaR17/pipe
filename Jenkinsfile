@@ -1,45 +1,43 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS' // Name of your Node.js installation in Jenkins
-    }
-
     stages {
-        stage('Build') {
+        stage('Checkout SCM') {
             steps {
-                script {
-                    sh 'npm install'
-                }
+                git 'https://github.com/AakankshaR17/pipe.git'
             }
         }
-
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Lint') {
+            steps {
+                sh 'npx eslint .'
+            }
+        }
         stage('Test') {
-            when {
-                expression {
-                    fileExists('package.json') && sh(returnStdout: true, script: 'npm run | grep test').trim()
-                }
-            }
             steps {
-                script {
-                    sh 'npm test'
-                }
+                sh 'npm test'
             }
         }
-
         stage('Deploy') {
             steps {
-                script {
-                    // Your deployment commands go here
-                    echo "Deploying application..."
-                }
+                echo 'Deploying application...'
+                // Deployment command here
             }
         }
     }
-
     post {
         always {
             echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed.'
         }
     }
 }
