@@ -1,42 +1,44 @@
 pipeline {
-  agent any
+    agent any
 
-  tools {
-    nodejs 'NodeJS' // Name of your Node.js installation
-  }
+    tools {
+        nodejs 'NodeJS' // Name of your Node.js installation in Jenkins
+    }
 
-  stages {
-    stage('Build') {
-      steps {
-        script {
-          // Install dependencies
-          sh 'npm install'
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh 'npm install'
+                }
+            }
         }
-      }
-    }
 
-    stage('Test') {
-      steps {
-        script {
-          // Run unit tests
-          sh 'npm test'
+        stage('Test') {
+            when {
+                expression {
+                    fileExists('package.json') && sh(returnStdout: true, script: 'npm run | grep test').trim()
+                }
+            }
+            steps {
+                script {
+                    sh 'npm test'
+                }
+            }
         }
-      }
-    }
 
-    stage('Deploy') {
-      steps {
-        script {
-          // Start the application
-          sh 'nohup node app.js &'
+        stage('Deploy') {
+            steps {
+                script {
+                    // Add your deployment commands here
+                }
+            }
         }
-      }
     }
-  }
 
-  post {
-    always {
-      echo 'Pipeline finished.'
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
     }
-  }
 }
