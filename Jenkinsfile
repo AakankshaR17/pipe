@@ -30,7 +30,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Add your deployment commands here
+                    // Your deployment commands go here
+                    echo "Deploying application..."
                 }
             }
         }
